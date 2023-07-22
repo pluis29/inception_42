@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb
+    build:
+      context: requirements/mariadb
+      args:
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - inception
+    volumes:
+      - mariadb:/var/lib/mysql
+
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    build:
+      context: requirements/wordpress
+      args:
+        MYSQL_HOST: ${MYSQL_HOST}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - inception
+    volumes:
+      - wordpress:/var/www/wordpress
+    depends_on:
+      - mariadb
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    build:
+      context: requirements/nginx
+    networks:
+      - inception
+    ports:
+      - 443:443
+    volumes:
+      - wordpress:/var/www/wordpress
+    depends_on:
+      - wordpress
+
+# Create a bridge network by default
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+# Create volumes
+volumes:
+  mariadb:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/lpaulo-d/data/mariadb
+  wordpress:
+    driver_opts:
+      o: bind
+      type: none
+      device: /home/lpaulo-d/data/wordpress
