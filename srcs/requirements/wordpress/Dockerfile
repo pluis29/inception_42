@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 
 # argumentos das vaariaveis de ambiente
 ARG MYSQL_HOST
@@ -35,7 +35,7 @@ RUN mkdir /run/php
 # Seta o diretório html como workdir
 WORKDIR /var/www/wordpress/
 
-RUN sed -i 's/listen\s*=\s*.*/listen = 0.0.0.0:9000/g' /etc/php/7.3/fpm/pool.d/www.conf
+RUN sed -i 's/listen\s*=\s*.*/listen = 0.0.0.0:9000/g' /etc/php/7.4/fpm/pool.d/www.conf
 
 # Configura o wordpress copiando alguns arquivos e alterando as variaveis do banco de dados no arquivo wp-config (linhas 47 a 50)
 RUN cp wp-config-sample.php wp-config.php && \
@@ -51,5 +51,4 @@ RUN cp wp-config-sample.php wp-config.php && \
 # Abre a porta 9000 para o php-fpm
 EXPOSE 9000
 
-# Inicia php-fpm
-CMD ["php-fpm7.3", "-F"]
+CMD ["php-fpm7.4", "-F"]

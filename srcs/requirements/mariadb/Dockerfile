@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:bullseye
 
 ARG MYSQL_DATABASE
 ARG MYSQL_ROOT_PASSWORD
@@ -16,8 +16,7 @@ RUN mkdir -p /var/run/mysqld \
 COPY ./conf/mariadb.sql /
 
 RUN sed -i 's/bind-address/#bind-address/' /etc/mysql/mariadb.conf.d/50-server.cnf && \
-	service mysql start && \
-	sleep 5s && \
+	service mariadb start && \
 	echo "GRANT ALL ON *.* TO root@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' WITH GRANT OPTION; FLUSH PRIVILEGES" | mysql && \
 	mysqladmin -u root password "$MYSQL_ROOT_PASSWORD" && \
 	mysql -e "CREATE DATABASE $MYSQL_DATABASE;" && \
@@ -25,6 +24,7 @@ RUN sed -i 's/bind-address/#bind-address/' /etc/mysql/mariadb.conf.d/50-server.c
 	mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%';" && \
 	mysql -e "FLUSH PRIVILEGES;" && \
 	mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < mariadb.sql ;
+
 
 EXPOSE 3306
 
