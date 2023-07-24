@@ -19,4 +19,6 @@ ENTRYPOINT ["script.sh"]
 
 WORKDIR /usr
 
+EXPOSE 3306
+
 CMD ["mysqld_safe", "--datadir=/var/lib/mysql"]

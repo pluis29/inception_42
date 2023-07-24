@@ -46,5 +46,6 @@ RUN chmod +x /usr/local/bin/script.sh
 RUN rm -f /etc/php/7.4/fpm/pool.d/www.conf
 
 ENTRYPOINT [ "script.sh" ]
+EXPOSE 9000
 
 CMD [ "/usr/sbin/php-fpm7.4", "-F" ]
