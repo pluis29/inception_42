@@ -1,10 +1,5 @@
 FROM debian:bullseye
 
-ARG MYSQL_DATABASE
-ARG MYSQL_ROOT_PASSWORD
-ARG MYSQL_USER
-ARG MYSQL_PASSWORD
-
 RUN apt-get update \
 	&& apt-get install -y mariadb-server \
 	&& rm -rf /var/lib/apt/lists/*

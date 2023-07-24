@@ -1,54 +1,50 @@
 FROM debian:bullseye
 
-# argumentos das vaariaveis de ambiente
-ARG MYSQL_HOST
-ARG MYSQL_DATABASE
-ARG MYSQL_USER
-ARG MYSQL_PASSWORD
+ARG	WORDPRESS_VERSION=5.8.3
 
-# Instala as dependências
 RUN apt-get update && apt-get install -y \
-	php \
-	php-fpm \
-	php-mysql \
-	php-gd \
-	php-opcache \
-	php-cli \
-	php-curl \
-	php-mbstring \
+	gettext \
+	php7.4 \
+	php7.4-fpm \
+	php7.4-cli \
 	wget \
-	apt-utils \
-	unzip
-
-# Faz o download e extrai a última versão do WordPress
-RUN wget -P /tmp https://wordpress.org/latest.zip \
-	&& unzip /tmp/latest.zip -d /var/www/ \
-	&& rm /tmp/latest.zip
-
-# Seta o ownership e permissões para as files do WordPress
-RUN chown -R www-data:www-data /var/www/wordpress \
-	&& chmod -R 777 /var/www/wordpress
-
-# Cria a pasta para que o php possa rodar
-RUN mkdir /run/php
-
-# Seta o diretório html como workdir
-WORKDIR /var/www/wordpress/
-
-RUN sed -i 's/listen\s*=\s*.*/listen = 0.0.0.0:9000/g' /etc/php/7.4/fpm/pool.d/www.conf
-
-# Configura o wordpress copiando alguns arquivos e alterando as variaveis do banco de dados no arquivo wp-config (linhas 47 a 50)
-RUN cp wp-config-sample.php wp-config.php && \
-	sleep 5s && \
-	mv wp-config-sample.php /var/www/wordpress/wp-config.php && \
-	sed -i "s/username_here/$MYSQL_USER/g" /var/www/wordpress/wp-config.php && \
-	sed -i "s/password_here/$MYSQL_PASSWORD/g" /var/www/wordpress/wp-config.php && \
-	sed -i "s/localhost/$MYSQL_HOST/g" /var/www/wordpress/wp-config.php && \
-	sed -i "s/database_name_here/$MYSQL_DATABASE/g" /var/www/wordpress/wp-config.php && \
-	chown -R www-data:www-data /var/www/wordpress
+	curl \
+	procps \
+	php7.4-curl \
+	php7.4-mysql \
+	php7.4-mbstring \
+	php7.4-xml \
+	php7.4-gd \
+	sendmail \
+	mariadb-client \
+	gettext-base \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& mkdir /run/php
 
 
-# Abre a porta 9000 para o php-fpm
-EXPOSE 9000
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	--output-document=/usr/local/bin/wp \
+  && chmod +x /usr/local/bin/wp
 
-CMD ["php-fpm7.4", "-F"]
+RUN mkdir -p /run/php /var/www/html/wordpress \
+  && chmod -R 755 /var/www/html/
+
+RUN addgroup --system wpg \
+  && adduser --system wpg
+
+COPY ./conf/www.conf /www.conf.tmpl
+
+WORKDIR /var/www/html/wordpress
+
+RUN wp core download --allow-root --version=$WORDPRESS_VERSION
+
+COPY tools/script.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/script.sh
+
+RUN rm -f /etc/php/7.4/fpm/pool.d/www.conf
+
+ENTRYPOINT [ "script.sh" ]
+
+CMD [ "/usr/sbin/php-fpm7.4", "-F" ]
