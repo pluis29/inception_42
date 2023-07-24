@@ -6,6 +6,7 @@ VMARIADB=/home/lpaulo-d/data/mariadb
 all:
 	@sudo mkdir -pv $(VMARIADB)
 	@sudo mkdir -pv $(VWORDPRESS)
+	@echo "127.0.0.1 lpaulo-d.42.fr" | sudo tee --append /etc/hosts
 	@docker-compose -f $(FCOMPOSE) --env-file $(ENV_FILE) up -d --build
 
 down:
