@@ -14,7 +14,7 @@
 define( 'DB_NAME', getenv("db_database") );
 define( 'DB_USER', getenv("db_user") );
 define( 'DB_PASSWORD', getenv("db_password") );
-define( 'DB_HOST', getenv("db_host") . ":3306" );
+define( 'DB_HOST', getenv("db_host"));
 define( 'DB_CHARSET', getenv("db_charset") );
 define( 'DB_COLLATE', getenv("db_collaction") );
 
