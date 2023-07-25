@@ -23,7 +23,7 @@ services:
     networks:
       - inception
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html/wordpress
     depends_on:
       - mariadb
     env_file:
@@ -40,7 +40,7 @@ services:
     ports:
       - 433:433
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html/wordpress
     depends_on:
       - wordpress
     environment:
