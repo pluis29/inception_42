@@ -1,69 +1,70 @@
-version: '3'
+version: '3.8'
 
 services:
-  # wordpress:
-  #   build: requirements/wordpress
-  #   container_name: wordpress
-  #   image: wordpress
-  #   depends_on:
-  #     - mariadb
-  #   volumes:
-  #     - wordpress:/var/www/html/wordpress
-  #   networks:
-  #     - inception
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - 9000:9000
+  wordpress:
+    build: requirements/wordpress
+    container_name: wordpress
+    image: wordpress
+    # restart: always
+    depends_on:
+      - mariadb
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    networks:
+      - inception
+    env_file:
+      - .env
+    ports:
+      - 9000:9000
 
-  # mariadb:
-  #   build: requirements/mariadb
-  #   container_name: mariadb
-  #   image: mariadb
-  #   restart: always
-  #   volumes:
-  #     - mariadb:/var/lib/mariadb
-  #   networks:
-  #     - inception
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - 3306:3306
+  mariadb:
+    build: requirements/mariadb
+    container_name: mariadb
+    image: mariadb
+    # restart: always
+    volumes:
+      - mariadb:/var/lib/mariadb
+    networks:
+      - inception
+    env_file:
+      - .env
+    ports:
+      - 3306:3306
 
   nginx:
     container_name: nginx
     image: nginx
-    restart: always
+    # restart: always
     build:
       context: requirements/nginx
+      dockerfile: Dockerfile
     networks:
       - inception
     ports:
-      - 433:433
+      - "443:443"
+      # - 80:80
     # volumes:
     #   - wordpress:/var/www/html/wordpress
-    # depends_on:
-    #   - wordpress
-    environment:
-      - .env
+    depends_on:
+      - wordpress
 
 # Create volumes
-# volumes:
-  # mariadb:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: /home/lpaulo-d/data/mariadb
-  #     o: bind
-  #   name: mariadb
+volumes:
+  mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/lpaulo-d/data/mariadb
+      o: bind
+    name: mariadb
 
-  # wordpress:
-  #   driver: local
-  #   driver_opts:
-  #     type: none
-  #     device: /home/lpaulo-d/data/wordpress
-  #     o: bind
-  #   name: wordpress
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/lpaulo-d/data/wordpress
+      o: bind
+    name: wordpress
 
 # Create a bridge network by default
 networks:

@@ -45,7 +45,7 @@ COPY tools/script.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/script.sh
 
 ENTRYPOINT [ "script.sh" ]
-
+EXPOSE 9000
 
 
 CMD [ "/usr/sbin/php-fpm7.4", "-F" ]

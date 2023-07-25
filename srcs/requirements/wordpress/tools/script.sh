@@ -23,6 +23,8 @@ wp user create --allow-root \
 	--role=author \
 	--user_pass=$WP_PASSWORD
 
+wp config set WP_HOME $WP_SITEURL --allow-root
+wp config set WP_SITEURL $WP_SITEURL --allow-root
 wp config set WORDPRESS_DEBUG false --allow-root
 
 sed -ie 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 0.0.0.0:9000/g' \
