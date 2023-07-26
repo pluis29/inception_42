@@ -5,7 +5,7 @@ services:
     build: requirements/wordpress
     container_name: wordpress
     image: wordpress
-    # restart: always
+    restart: always
     depends_on:
       - mariadb
     volumes:
@@ -19,9 +19,9 @@ services:
     build: requirements/mariadb
     container_name: mariadb
     image: mariadb
-    # restart: always
+    restart: always
     volumes:
-      - mariadb:/var/lib/mariadb
+      - mariadb:/var/lib/mysql
     networks:
       - inception
     env_file:
@@ -30,7 +30,7 @@ services:
   nginx:
     container_name: nginx
     image: nginx
-    # restart: always
+    restart: always
     build:
       context: requirements/nginx
       dockerfile: Dockerfile
@@ -38,13 +38,11 @@ services:
       - inception
     ports:
       - "443:443"
-      # - 80:80
     volumes:
       - wordpress:/var/www/html/wordpress
     depends_on:
       - wordpress
 
-# Create volumes
 volumes:
   mariadb:
     driver: local
@@ -62,7 +60,6 @@ volumes:
       o: bind
     name: wordpress
 
-# Create a bridge network by default
 networks:
   inception:
     name: inception

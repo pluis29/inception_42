@@ -1,25 +1,57 @@
+# Arquivo de configuração do MariaDB
 [server]
 
 [mysqld]
-
+# Define o usuário do processo do MariaDB
 user                    = mysql
+
+# Caminho para o arquivo de PID (identificador de processo).
+# Esse arquivo é usado para rastrear o processo principal do MariaDB.
 pid-file                = /run/mysqld/mysqld.pid
+
+# Caminho para o arquivo do socket do MariaDB.
+# O socket é usado para estabelecer conexões locais com o servidor MariaDB.
 socket                  = /run/mysqld/mysqld.sock
+
+# Porta na qual o MariaDB estará escutando para conexões.
 port                    = 3306
+
+# Diretório base do MariaDB.
+# É o diretório onde os binários do MariaDB estão localizados.
 basedir                 = /usr
+
+# Diretório onde os dados do MariaDB serão armazenados.
 datadir                 = /var/lib/mysql
+
+# Diretório temporário para o MariaDB.
+# Ele é usado para operações temporárias, como classificação e mesclagem.
 tmpdir                  = /tmp
+
+# Diretório para os arquivos de mensagens do MariaDB.
 lc-messages-dir         = /usr/share/mysql
 
+# Endereço IP ao qual o MariaDB estará vinculado.
+# 0.0.0.0 significa que o MariaDB estará vinculado a todas as interfaces,
+# permitindo conexões de qualquer endereço IP.
 bind-address            = 0.0.0.0
 
+# Tamanho do cache de consulta em memória.
+# Esse cache melhora o desempenho armazenando em cache os resultados de consultas frequentes.
 query_cache_size        = 16M
 
+# Caminho para o arquivo de log de erro do MariaDB.
+# Aqui serão registradas as mensagens de erro e problemas encontrados pelo servidor MariaDB.
 log_error = /var/log/mysql/error.log
 
+# Número de dias após os quais os arquivos de log serão expirados e removidos.
 expire_logs_days        = 10
 
+# Conjunto de caracteres padrão do servidor.
+# Todas as tabelas e strings no MariaDB serão criadas usando esse conjunto de caracteres.
 character-set-server  = utf8mb4
+
+# Colação (collation) padrão do servidor.
+# A colação define como as strings são comparadas e ordenadas.
 collation-server      = utf8mb4_general_ci
 
 [embedded]
