@@ -7,7 +7,6 @@ RUN apt-get update \
 
 COPY ./conf/nginx.conf /etc/nginx/sites-available/default
 COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
-# RUN mkdir -p /var/www/html/wordpress
 
 EXPOSE 443
 
